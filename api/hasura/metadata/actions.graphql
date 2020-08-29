@@ -1,0 +1,28 @@
+type Mutation {
+  checkAndRegisterUser : CheckAndRegisterUserOutput
+}
+
+
+type Mutation {
+  fileUpload (
+    name: String!
+    type: String!
+    base64str: String!
+  ): fileOutput
+}
+
+
+
+
+type CheckAndRegisterUserOutput {
+  affected_rows : Int!
+}
+
+type AddResult {
+  sum : Int
+}
+
+type fileOutput {
+  file_path : String!
+}
+

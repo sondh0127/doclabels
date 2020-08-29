@@ -1,0 +1,30 @@
+version: "3.7"
+volumes:
+  postgres_data: {}
+
+services:
+  postgres:
+    image: postgres:10
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  graphql-engine:
+    image: hasura/graphql-engine:v1.3.0-beta.3
+    ports:
+      - "3100:8080"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ADMIN_SECRET: B2123ilu
+      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS512", "key": "-----BEGIN CERTIFICATE-----\nMIIDBzCCAe+gAwIBAgIJbX5e1u+XtzQpMA0GCSqGSIb3DQEBCwUAMCExHzAdBgNV\nBAMTFmRldi16YWs3MjBlYy5hdXRoMC5jb20wHhcNMjAwNDA1MTgyMTA1WhcNMzMx\nMjEzMTgyMTA1WjAhMR8wHQYDVQQDExZkZXYtemFrNzIwZWMuYXV0aDAuY29tMIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArweKNEsPBMfMtrlIIMOKiFKE\namWBYFgrSpqlNBKn4nhnevYyzgu0DeIWa1labFK1JzNuf7lgVHJ82QZk+sAgjiXN\n0yHUwAfBXt8t0++pfUiOlGe1jRbU8GFLwBSsU4sdlxPyCpad+QGjNt5qronruCmu\n5RM/YHdUgeAhdZH6RNo8NlKjpftnVYE40mD13hb6X5e837E98uXhXyygSMUvs3bu\nzo9JQAvQfwre3S4IcrSqwC3/YdZtQHBkZhq3wuT7Qn3iPxYLAKjOkiotSeKNL1Q+\nvWlf8zK3FWSZDtvPR4gtA+VDpz3oJB6O5cJA0cNoGSxmSLGRo4kRoBhZF/FyzQID\nAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQFQ0qW/xmNfTJbWatD\nn2W1pdfr/DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQELBQADggEBAACZHCDC\nfGBswkkCbB60RyqNBmxUpeMPL/pm+3F2+Q7d5j+/o8gi7/175m7DwMTO7AwMXy0d\n9IYyw9ypnH4buo7stC7HJZrLSHv1DqwpVLL8JZ2oS/Ne14DeP7T546k34edpBD7o\nIM2J5LpD50iBM2z7nFj+MiJxRlshirCs50jkriKICqSJ9dgvzlCBiYBSD5Y1ooQr\nlpcCHm31xOuhr1YUSFKCSOSUDU+Z2Ubi8R9BivqiIJi0hnsRZf34U3kKvJo+slp7\nGdvyztRZPsBjD5qGsMCL3JFESsoOMiRaUmPTSH3SX2Za4Uk3jivqCjH0epmT9C6Y\no359C2mNil3C7To=\n-----END CERTIFICATE-----"}'
+      ACTIONS_BASE_URL: http://host.docker.internal:7071
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"

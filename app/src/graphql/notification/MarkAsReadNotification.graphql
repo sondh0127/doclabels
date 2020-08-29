@@ -1,0 +1,14 @@
+mutation MarkAsReadNotification($id: uuid!) {
+  update_project_notifications_by_pk(
+    pk_columns: { id: $id }
+    _set: { is_read: true }
+  ) {
+    addition_data
+    id
+    is_read
+  }
+}
+
+# {
+#   "id": "44efabcb-3d33-409c-afcf-fd4c1949a143",
+# }

@@ -1,0 +1,7 @@
+mutation DeleteAnnotations($ids: [uuid!]!) {
+  delete_annotations(where: { id: { _in: $ids } }) {
+    returning {
+      ...Annotation
+    }
+  }
+}

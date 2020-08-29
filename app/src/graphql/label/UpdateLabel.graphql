@@ -1,0 +1,14 @@
+mutation UpdateLabel($id: uuid!, $changes: labels_set_input) {
+  update_labels_by_pk(pk_columns: { id: $id }, _set: $changes) {
+    ...Label
+  }
+}
+
+# {
+#   "id": "9385e217-dd1e-4ae7-bf5b-94147b4b66ec",
+# 	"changes": {
+#     "color": "#f5222d",
+#     "hotkey": "B",
+#     "text": "Sample"
+#   }
+# }

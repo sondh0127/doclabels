@@ -1,0 +1,20 @@
+mutation ContributorRequest($project_id: uuid!, $addition_data: jsonb!) {
+  insert_project_notifications_one(
+    object: {
+      notification_type: contributor_request
+      target_id: $project_id
+      addition_data: $addition_data
+    }
+  ) {
+    addition_data
+    created_at
+    id
+    notification_type
+    sender_id
+  }
+}
+
+# {
+#   "project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143",
+#   "addition_data": {"role_type": "annotator"}
+# }

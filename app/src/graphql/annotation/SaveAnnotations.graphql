@@ -1,0 +1,24 @@
+mutation SaveAnnotations($annotations: [annotations_insert_input!]!, $ids: [uuid!]!) {
+  insert_annotations(objects: $annotations) {
+    returning {
+      ...Annotation
+    }
+  }
+  delete_annotations(where: { id: { _in: $ids } }) {
+    returning {
+      ...Annotation
+    }
+  }
+}
+
+# {
+# 	"annotations": [
+#     {
+#       "data": {
+#           "text": "P",
+#   		},
+#       "document_id": "b4981d94-d9b8-4585-8d7b-4933c3531a43",
+#       "label_id": "91b584e7-fab6-4c33-b3e6-f0bd5ac4728d"
+#     }
+#   ]
+# }

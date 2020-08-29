@@ -1,0 +1,53 @@
+query MyProjects(
+  $name_or_description: String
+  $project_types: [project_types_enum!]
+  $auth0_id: String!
+  $offset: Int
+  $limit: Int
+) {
+  projects_aggregate(
+    where: {
+      _and: [
+        {
+          _or: [
+            { name: { _ilike: $name_or_description } }
+            { description: { _ilike: $name_or_description } }
+          ]
+        }
+        { project_type: { _in: $project_types } }
+        { user: { auth0_id: { _eq: $auth0_id } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  projects(
+    limit: $limit
+    offset: $offset
+    order_by: { updated_at: desc }
+    where: {
+      _and: [
+        {
+          _or: [
+            { name: { _ilike: $name_or_description } }
+            { description: { _ilike: $name_or_description } }
+          ]
+        }
+        { project_type: { _in: $project_types } }
+        { user: { auth0_id: { _eq: $auth0_id } } }
+      ]
+    }
+  ) {
+    ...ProjectOld
+    ...ProjectStatistics
+  }
+}
+
+# {
+# "name_or_description": "%%",
+# "project_types": ["PdfLabelingProject", "Seq2seqProject", "SequenceLabelingProject", "TextClassificationProject"],
+# "role_type": "project_admin",
+# "auth0_id": "google-oauth2|108271244867679812300zxc"
+# }

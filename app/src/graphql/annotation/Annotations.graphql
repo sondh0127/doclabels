@@ -1,0 +1,15 @@
+query Annotations($document_id: uuid!, $user_id: uuid, $is_approved: Boolean) {
+  annotations(
+    where: {
+      document_id: { _eq: $document_id }
+      user_id: { _eq: $user_id }
+      task_distribution: { is_approved: { _eq: $is_approved } }
+    }
+  ) {
+    ...Annotation
+  }
+}
+
+# {
+# 	"task_id": "b4981d94-d9b8-4585-8d7b-4933c3531a43"
+# }

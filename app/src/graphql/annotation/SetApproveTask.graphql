@@ -1,0 +1,5 @@
+mutation SetApproveTask($id: uuid!, $is_approved: Boolean!) {
+  update_task_distribution_by_pk(pk_columns: { id: $id }, _set: { is_approved: $is_approved }) {
+    ...TaskDistribution
+  }
+}

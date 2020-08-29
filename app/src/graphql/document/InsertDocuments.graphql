@@ -1,0 +1,22 @@
+mutation InsertDocuments($documents: [documents_insert_input!]!) {
+  insert_documents(objects: $documents) {
+    returning {
+      ...Document
+    }
+  }
+}
+
+# {
+# 	"documents": [
+#     {
+#       "meta": "meta001",
+#       "text": "text001",
+#       "project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143"
+#     },
+#     {
+#       "meta": "meta002",
+#       "text": "text002",
+#       "project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143"
+#     }
+#   ]
+# }

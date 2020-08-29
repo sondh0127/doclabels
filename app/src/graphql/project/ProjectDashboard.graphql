@@ -1,0 +1,56 @@
+query ProjectDashboard($project_id: uuid!) {
+  labels_aggregate(where: { project_id: { _eq: $project_id } }) {
+    aggregate {
+      count
+    }
+    nodes {
+      id
+      text
+      color
+      annotations_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+  documents_aggregate(where: { project_id: { _eq: $project_id } }) {
+    aggregate {
+      count
+    }
+    nodes {
+      text
+      annotations_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+  project_contributors_aggregate(
+    where: { project_id: { _eq: $project_id }, role_type: { _eq: annotator } }
+  ) @connection(key: "project_contributors_aggregate", filter: ["project_id"]) {
+    aggregate {
+      count
+    }
+    nodes {
+      user {
+        name
+        annotations_aggregate(where: { document: { project_id: { _eq: $project_id } } }) {
+          aggregate {
+            count
+          }
+          nodes {
+            document {
+              project_id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# {
+# "project_id": "b6f1a6d8-f976-404a-99a4-41df71530469"
+# }

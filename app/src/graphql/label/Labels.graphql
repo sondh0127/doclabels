@@ -1,0 +1,21 @@
+query Labels($project_id: uuid!, $limit: Int, $offset: Int) {
+  labels(
+    where: { project_id: { _eq: $project_id } }
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+  ) {
+    ...Label
+  }
+  labels_aggregate(where: { project_id: { _eq: $project_id } }) {
+    aggregate {
+      count
+    }
+  }
+}
+
+# {
+# 	"project_id": "2c2e88fa-4ad5-43dd-8ef2-1f30653b460e",
+#   "limit": 2,
+#   "offset": 0
+# }

@@ -1,0 +1,61 @@
+query ExploreProjects(
+  $name_or_description: String
+  $project_types: [project_types_enum!]
+  $auth0_id: String!
+  $offset: Int
+  $limit: Int
+) {
+  projects_aggregate(
+    where: {
+      _and: [
+        {
+          _or: [
+            { name: { _ilike: $name_or_description } }
+            { description: { _ilike: $name_or_description } }
+          ]
+        }
+        { project_type: { _in: $project_types } }
+        { is_public: { _eq: true } }
+        { _not: { project_contributors: { user: { auth0_id: { _eq: $auth0_id } } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  projects(
+    limit: $limit
+    offset: $offset
+    order_by: { updated_at: desc }
+    where: {
+      _and: [
+        {
+          _or: [
+            { name: { _ilike: $name_or_description } }
+            { description: { _ilike: $name_or_description } }
+          ]
+        }
+        { project_type: { _in: $project_types } }
+        { is_public: { _eq: true } }
+        { _not: { project_contributors: { user: { auth0_id: { _eq: $auth0_id } } } } }
+      ]
+    }
+  ) {
+    ...ProjectOld
+    project_notifications {
+      addition_data
+      created_at
+      id
+      notification_type
+      sender_id
+    }
+    ...ProjectStatistics
+  }
+}
+
+# {
+# "name_or_description": "%%",
+# "project_types": ["PdfLabelingProject", "Seq2seqProject", "SequenceLabelingProject", "TextClassificationProject"]
+# "user_id": "4dc14875-6719-47fd-bfcb-f87212ac2d64"
+# }

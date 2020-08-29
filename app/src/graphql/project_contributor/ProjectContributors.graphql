@@ -1,0 +1,20 @@
+query ProjectContributors($project_id: uuid!, $limit: Int, $offset: Int) {
+  project_contributors(
+    where: { project_id: { _eq: $project_id } }
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+  ) {
+    ...ProjectContributor
+  }
+  project_contributors_aggregate(where: { project_id: { _eq: $project_id } })
+    @connection(key: "project_contributors_aggregate", filter: ["project_id"]) {
+    aggregate {
+      count
+    }
+  }
+}
+
+# {
+# 	"project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143"
+# }

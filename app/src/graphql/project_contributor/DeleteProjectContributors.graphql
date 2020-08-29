@@ -1,0 +1,9 @@
+mutation DeleteProjectContributors($id: uuid!) {
+  delete_project_contributors_by_pk(id: $id) {
+    ...ProjectContributor
+  }
+}
+
+# {
+# 	"id": "d7fe3d85-5ce7-4dc8-9820-962f1689db88"
+# }

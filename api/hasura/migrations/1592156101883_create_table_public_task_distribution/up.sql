@@ -1,0 +1,2 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE "public"."task_distribution"("id" uuid NOT NULL DEFAULT gen_random_uuid(), "document_id" uuid NOT NULL, "user_id" uuid NOT NULL, "is_confirmed" boolean NOT NULL DEFAULT false, PRIMARY KEY ("id") , FOREIGN KEY ("document_id") REFERENCES "public"."documents"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON UPDATE restrict ON DELETE restrict, UNIQUE ("user_id", "document_id"));

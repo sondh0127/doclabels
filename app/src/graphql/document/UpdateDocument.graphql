@@ -1,0 +1,13 @@
+mutation UpdateDocument($id: uuid!, $changes: documents_set_input) {
+  update_documents_by_pk(pk_columns: { id: $id }, _set: $changes) {
+    ...Document
+  }
+}
+
+# {
+# 	"id": "ad8d1c4b-2cb6-4975-8439-900d53d37501",
+#   "changes": {
+#     "meta": "meta001-new",
+#     "text": "text001-new"
+#   }
+# }

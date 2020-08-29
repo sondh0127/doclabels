@@ -1,0 +1,12 @@
+mutation UpdateProjects($id: uuid!, $change: projects_set_input) {
+  update_projects_by_pk(pk_columns: { id: $id }, _set: $change) {
+    ...ProjectOld
+  }
+}
+
+# {
+#   "id": "48d37f22-dfd5-4a0c-b79e-2cbbac215e31",
+#   "change": {
+#     "is_public": false
+#   }
+# }

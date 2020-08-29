@@ -1,0 +1,13 @@
+.switchTheme {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  width: 11rem;
+}
+
+.wrap {
+  width: calc(100%);
+  margin-left: calc((15vw - 320px) / 2);
+}

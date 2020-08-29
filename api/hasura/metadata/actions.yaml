@@ -1,0 +1,23 @@
+actions:
+- name: checkAndRegisterUser
+  definition:
+    kind: synchronous
+    handler: '{{ACTIONS_BASE_URL}}/api/checkAndRegisterUser?code=ZRMQ6cAJvPiZlewRTbrDo0O9gQsucfXIY2i4/kBGi6B2KRK5k2r4fA=='
+    forward_client_headers: true
+  permissions:
+  - role: user
+- name: fileUpload
+  definition:
+    kind: synchronous
+    handler: https://file-upload.sondh0127.vercel.app/fileUpload
+    forward_client_headers: true
+  permissions:
+  - role: user
+custom_types:
+  enums: []
+  input_objects: []
+  objects:
+  - name: CheckAndRegisterUserOutput
+  - name: AddResult
+  - name: fileOutput
+  scalars: []

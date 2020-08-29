@@ -1,0 +1,9 @@
+mutation DeleteDocument($id: uuid!) {
+  delete_documents_by_pk(id: $id) {
+    ...Document
+  }
+}
+
+# {
+# 	"id": "ad8d1c4b-2cb6-4975-8439-900d53d37501"
+# }

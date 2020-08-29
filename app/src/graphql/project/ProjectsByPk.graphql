@@ -1,0 +1,9 @@
+query ProjectsByPk($id: uuid!) {
+  projects_by_pk(id: $id) {
+    ...ProjectOld
+  }
+}
+
+# {
+# "id": "b6f1a6d8-f976-404a-99a4-41df71530469"
+# }

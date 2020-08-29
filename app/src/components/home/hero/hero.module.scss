@@ -1,0 +1,10 @@
+.hero {
+  background-color: rgb(0, 119, 204);
+
+  &Page {
+    height: 100%;
+    max-width: 1140px;
+    margin: auto;
+    padding: 70px 0;
+  }
+}

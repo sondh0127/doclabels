@@ -1,0 +1,66 @@
+schema:
+  - ./schema/graphql.schema.json
+overwrite: true
+config:
+  scalars:
+    DateTime: Date
+    JSON: '{ [key: string]: any }'
+generates:
+  ./src/autogen/index.tsx:
+    documents:
+      - ./src/**/*.tsx
+      - ./src/**/*.ts
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      reactApolloVersion: 3
+      withHooks: false
+      withHOC: false
+      withComponent: false
+      skipTypename: false
+      includeDirectives: true
+  ./src/autogen/hasura/ts.ts:
+    documents:
+      - ./src/customFragments.ts
+    plugins:
+      - graphql-codegen-hasura-typescript
+    config:
+      reactApolloVersion: 3
+      typescriptCodegenOutputPath: '../'
+      trimString:
+      withClientAndCacheHelpers: true
+      withQueries: true
+      withSubscriptions: true
+      withInserts: true
+      withUpdates: true
+      withDeletes: true
+  ./src/autogen/hasura/react.ts:
+    documents:
+      - ./src/customFragments.ts
+    plugins:
+      - graphql-codegen-hasura-react
+    config:
+      reactApolloVersion: 3
+      typescriptCodegenOutputPath: '../'
+      trimString:
+      withQueries: true
+      withSubscriptions: true
+      withInserts: true
+      withUpdates: true
+      withDeletes: true
+  ./src/autogen/hasura/config.ts:
+    documents:
+      - ./src/customFragments.ts
+    plugins:
+      - graphql-codegen-hasura-client-config
+    config:
+      reactApolloVersion: 3
+      typescriptCodegenOutputPath: '../'
+      trimString:
+      withTypePolicies: true
+      withResolverTypes: true
+      withCombinedTypePolicyObject: false
+      withCacheRedirects: true
+      withCombinedCacheRedirectObject: true

@@ -1,0 +1,15 @@
+query TaskDistributionAggregate($project_id: uuid!) {
+  project_contributors(
+    where: { project_id: { _eq: $project_id }, role_type: { _eq: annotator } }
+    order_by: { user: { task_distributions_aggregate: { count: asc } } }
+  ) {
+    user {
+      id
+      task_distributions_aggregate(where: { document: { project_id: { _eq: $project_id } } }) {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}

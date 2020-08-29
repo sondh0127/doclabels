@@ -1,0 +1,19 @@
+mutation InsertProjectContributors(
+  $project_id: uuid!
+  $role_type: role_types_enum
+  $user_id: uuid
+) {
+  insert_project_contributors(
+    objects: { project_id: $project_id, role_type: $role_type, user_id: $user_id }
+  ) {
+    returning {
+      ...ProjectContributor
+    }
+  }
+}
+
+# {
+# "project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143",
+# "user_id": "google-oauth2|103717809395205676275",
+# "role_type": "annotator"
+# }

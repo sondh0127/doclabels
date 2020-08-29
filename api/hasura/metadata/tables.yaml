@@ -1,0 +1,794 @@
+- table:
+    schema: public
+    name: annotations
+  object_relationships:
+  - name: document
+    using:
+      foreign_key_constraint_on: document_id
+  - name: label
+    using:
+      foreign_key_constraint_on: label_id
+  - name: task_distribution
+    using:
+      foreign_key_constraint_on: task_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        _or:
+        - _and:
+          - document:
+              project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - document:
+              project:
+                project_contributors:
+                  role_type:
+                    _in:
+                    - project_admin
+                    - annotator
+        - document:
+            project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-user-id
+      columns:
+      - data
+      - document_id
+      - label_id
+      - task_id
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - data
+      - document_id
+      - id
+      - is_submit
+      - label_id
+      - manual
+      - task_id
+      - user_id
+      filter:
+        _or:
+        - user_id:
+            _eq: X-Hasura-User-Id
+        - document:
+            project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+        - _and:
+          - document:
+              project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - document:
+              project:
+                project_contributors:
+                  role_type:
+                    _in:
+                    - project_admin
+                    - annotation_approver
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - data
+      - is_submit
+      - label_id
+      filter:
+        _and:
+        - user_id:
+            _eq: X-Hasura-User-Id
+        - is_submit:
+            _eq: false
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _and:
+        - user_id:
+            _eq: X-Hasura-User-Id
+        - is_submit:
+            _eq: false
+- table:
+    schema: public
+    name: documents
+  object_relationships:
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+  array_relationships:
+  - name: annotations
+    using:
+      foreign_key_constraint_on:
+        column: document_id
+        table:
+          schema: public
+          name: annotations
+  - name: task_distributions
+    using:
+      foreign_key_constraint_on:
+        column: document_id
+        table:
+          schema: public
+          name: task_distribution
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        _and:
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _eq: project_admin
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+      columns:
+      - meta
+      - project_id
+      - text
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - id
+      - meta
+      - project_id
+      - text
+      filter:
+        _and:
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _in:
+                    - project_admin
+                    - annotation_approver
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+          - task_distributions:
+              user_id:
+                _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - meta
+      - text
+      filter:
+        _and:
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _eq: project_admin
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _and:
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _eq: project_admin
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: labels
+  object_relationships:
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+  array_relationships:
+  - name: annotations
+    using:
+      foreign_key_constraint_on:
+        column: label_id
+        table:
+          schema: public
+          name: annotations
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        _and:
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _eq: project_admin
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+      columns:
+      - color
+      - hotkey
+      - project_id
+      - text
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - color
+      - created_at
+      - hotkey
+      - id
+      - project_id
+      - text
+      filter:
+        _or:
+        - _and:
+          - project:
+              project_contributors:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - project:
+              project_contributors:
+                role_type:
+                  _in:
+                  - project_admin
+                  - annotator
+                  - annotation_approver
+        - project:
+            owner_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - color
+      - hotkey
+      - text
+      filter:
+        _and:
+        - project:
+            is_public:
+              _eq: false
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _eq: project_admin
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _and:
+        - project:
+            is_public:
+              _eq: false
+        - _or:
+          - _and:
+            - project:
+                project_contributors:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+            - project:
+                project_contributors:
+                  role_type:
+                    _eq: project_admin
+          - project:
+              owner_id:
+                _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: notification_types
+  is_enum: true
+  array_relationships:
+  - name: project_notifications
+    using:
+      foreign_key_constraint_on:
+        column: notification_type
+        table:
+          schema: public
+          name: project_notifications
+- table:
+    schema: public
+    name: project_contributors
+  object_relationships:
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - name: roleType
+    using:
+      foreign_key_constraint_on: role_type
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        project:
+          owner_id:
+            _eq: X-Hasura-User-Id
+      columns:
+      - project_id
+      - role_type
+      - user_id
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - id
+      - project_id
+      - role_type
+      - user_id
+      filter:
+        _or:
+        - project:
+            owner_id:
+              _eq: X-Hasura-User-Id
+        - user_id:
+            _eq: X-Hasura-User-Id
+        - _and:
+          - project:
+              project_contributors:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - project:
+              project_contributors:
+                role_type:
+                  _eq: annotation_approver
+      allow_aggregations: true
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        project:
+          owner_id:
+            _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: project_notifications
+  object_relationships:
+  - name: notificationType
+    using:
+      foreign_key_constraint_on: notification_type
+  - name: project
+    using:
+      foreign_key_constraint_on: target_id
+  - name: user
+    using:
+      foreign_key_constraint_on: sender_id
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        sender_id:
+          _eq: X-Hasura-User-Id
+      set:
+        sender_id: x-hasura-user-id
+      columns:
+      - addition_data
+      - created_at
+      - id
+      - is_read
+      - notification_type
+      - sender_id
+      - target_id
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - addition_data
+      - created_at
+      - id
+      - is_read
+      - notification_type
+      - sender_id
+      - target_id
+      filter:
+        _or:
+        - _and:
+          - project:
+              project_contributors:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - project:
+              project_contributors:
+                role_type:
+                  _in:
+                  - project_admin
+        - project:
+            owner_id:
+              _eq: X-Hasura-User-Id
+        - user:
+            id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - is_read
+      filter:
+        _or:
+        - _and:
+          - project:
+              project_contributors:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - project:
+              project_contributors:
+                role_type:
+                  _in:
+                  - project_admin
+        - project:
+            owner_id:
+              _eq: X-Hasura-User-Id
+      check: null
+- table:
+    schema: public
+    name: project_types
+  is_enum: true
+  array_relationships:
+  - name: projects
+    using:
+      foreign_key_constraint_on:
+        column: project_type
+        table:
+          schema: public
+          name: projects
+- table:
+    schema: public
+    name: projects
+  object_relationships:
+  - name: projectType
+    using:
+      foreign_key_constraint_on: project_type
+  - name: user
+    using:
+      foreign_key_constraint_on: owner_id
+  array_relationships:
+  - name: documents
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: documents
+  - name: labels
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: labels
+  - name: project_contributors
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: project_contributors
+  - name: project_notifications
+    using:
+      foreign_key_constraint_on:
+        column: target_id
+        table:
+          schema: public
+          name: project_notifications
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        owner_id:
+          _eq: X-Hasura-User-Id
+      set:
+        owner_id: x-hasura-user-id
+      columns:
+      - annotator_per_example
+      - collaborative_annotation
+      - description
+      - guideline
+      - name
+      - project_type
+      - randomize_document_order
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - annotator_per_example
+      - check_dates
+      - collaborative_annotation
+      - created_at
+      - description
+      - due_date
+      - guideline
+      - id
+      - is_public
+      - name
+      - owner_id
+      - project_type
+      - published_date
+      - randomize_document_order
+      - updated_at
+      filter:
+        _and:
+        - _or:
+          - is_public:
+              _eq: true
+          - owner_id:
+              _eq: X-Hasura-User-Id
+          - project_contributors:
+              user_id:
+                _eq: X-Hasura-User-Id
+        - is_deleted:
+            _eq: false
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - annotator_per_example
+      - check_dates
+      - collaborative_annotation
+      - description
+      - due_date
+      - guideline
+      - is_deleted
+      - is_public
+      - name
+      - published_date
+      - randomize_document_order
+      filter:
+        owner_id:
+          _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        owner_id:
+          _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: role_types
+  is_enum: true
+  array_relationships:
+  - name: project_contributors
+    using:
+      foreign_key_constraint_on:
+        column: role_type
+        table:
+          schema: public
+          name: project_contributors
+- table:
+    schema: public
+    name: task_distribution
+  object_relationships:
+  - name: document
+    using:
+      foreign_key_constraint_on: document_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  array_relationships:
+  - name: annotations
+    using:
+      foreign_key_constraint_on:
+        column: task_id
+        table:
+          schema: public
+          name: annotations
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        _and:
+        - _or:
+          - document:
+              project:
+                owner_id:
+                  _eq: X-Hasura-User-Id
+          - document:
+              project:
+                project_contributors:
+                  _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role_type:
+                      _in:
+                      - project_admin
+      columns:
+      - document_id
+      - is_confirmed
+      - user_id
+      backend_only: false
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - document_id
+      - id
+      - is_approved
+      - is_confirmed
+      - user_id
+      filter:
+        _and:
+        - _or:
+          - document:
+              project:
+                owner_id:
+                  _eq: X-Hasura-User-Id
+          - document:
+              project:
+                project_contributors:
+                  _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role_type:
+                      _in:
+                      - project_admin
+                      - annotation_approver
+          - user_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - is_approved
+      - is_confirmed
+      filter:
+        _and:
+        - _or:
+          - document:
+              project:
+                owner_id:
+                  _eq: X-Hasura-User-Id
+          - document:
+              project:
+                project_contributors:
+                  _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role_type:
+                      _in:
+                      - project_admin
+                      - annotation_approver
+          - user_id:
+              _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _and:
+        - _or:
+          - document:
+              project:
+                owner_id:
+                  _eq: X-Hasura-User-Id
+          - document:
+              project:
+                project_contributors:
+                  _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role_type:
+                      _in:
+                      - project_admin
+- table:
+    schema: public
+    name: users
+  array_relationships:
+  - name: annotations
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: annotations
+  - name: project_contributors
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: project_contributors
+  - name: project_notifications
+    using:
+      foreign_key_constraint_on:
+        column: sender_id
+        table:
+          schema: public
+          name: project_notifications
+  - name: projects
+    using:
+      foreign_key_constraint_on:
+        column: owner_id
+        table:
+          schema: public
+          name: projects
+  - name: task_distributions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: task_distribution
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - auth0_id
+      - created_at
+      - id
+      - last_seen
+      - name
+      filter: {}
+  update_permissions:
+  - role: user
+    permission:
+      columns: []
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        id:
+          _eq: X-Hasura-User-Id

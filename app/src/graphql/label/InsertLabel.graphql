@@ -1,0 +1,24 @@
+mutation InsertLabel(
+  $text: String!
+  $color: String!
+  $hotkey: String!
+  $project_id: uuid!
+) {
+  insert_labels_one(
+    object: {
+      text: $text
+      color: $color
+      hotkey: $hotkey
+      project_id: $project_id
+    }
+  ) {
+    ...Label
+  }
+}
+
+# {
+# 	"project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143",
+# 	"text": "Text 001",
+#   "hotkey": "A",
+#   "color": "#434343"
+# }

@@ -1,0 +1,25 @@
+schema:
+  - 'https://hasura-next-doclabel.herokuapp.com/v1/graphql':
+      headers:
+        x-hasura-admin-secret: ${HASURA_GRAPHQL_ADMIN_SECRET}
+documents: './src/graphql/**/*.graphql'
+overwrite: true
+generates:
+  ./src/generated/graphql.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      skipTypename: false
+      withHooks: true
+      withComponent: false
+      withHOC: false
+      reactApolloVersion: 3
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+        - eslint --fix
+  ./graphql.schema.json:
+    plugins:
+      - 'introspection'

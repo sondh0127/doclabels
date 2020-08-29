@@ -1,0 +1,7 @@
+query MyProjectsAggregate($auth0_id: String!) {
+  projects_aggregate(where: { user: { auth0_id: { _eq: $auth0_id } } }) {
+    aggregate {
+      count
+    }
+  }
+}

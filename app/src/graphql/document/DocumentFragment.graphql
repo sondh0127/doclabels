@@ -1,0 +1,6 @@
+fragment Document on documents {
+  id
+  meta
+  text
+  created_at
+}

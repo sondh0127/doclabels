@@ -1,0 +1,10 @@
+fragment ProjectContributor on project_contributors {
+  id
+  user {
+    id
+    auth0_id
+    name
+  }
+  role_type
+  created_at
+}

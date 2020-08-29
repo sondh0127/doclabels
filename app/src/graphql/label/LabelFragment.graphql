@@ -1,0 +1,7 @@
+fragment Label on labels {
+  id
+  text
+  hotkey
+  color
+  created_at
+}

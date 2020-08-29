@@ -1,0 +1,32 @@
+query DocumentsDownload(
+  $project_id: uuid!
+  $limit: Int
+  $offset: Int
+  $user_id: uuid
+  $is_approved: Boolean
+) {
+  documents_aggregate(where: { project_id: { _eq: $project_id } }, order_by: { created_at: desc }) {
+    aggregate {
+      count
+    }
+  }
+  documents(
+    where: { project_id: { _eq: $project_id }, task_distributions: { user_id: { _eq: $user_id } } }
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+  ) {
+    ...DocumentAnnotation
+    task_distributions(where: { user_id: { _eq: $user_id }, is_approved: { _eq: $is_approved } }) {
+      ...TaskDistribution
+    }
+    annotations(
+      where: {
+        user_id: { _eq: $user_id }
+        task_distribution: { is_approved: { _eq: $is_approved } }
+      }
+    ) {
+      ...Annotation
+    }
+  }
+}

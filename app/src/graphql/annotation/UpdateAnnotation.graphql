@@ -1,0 +1,15 @@
+mutation UpdateAnnotation($id: uuid!, $changes: annotations_set_input) {
+  update_annotations_by_pk(pk_columns: { id: $id }, _set: $changes) {
+    ...Annotation
+  }
+}
+
+# {
+# 	"id": "9fc5be86-4f5a-4ecf-bb03-c20950faf670",
+#   "changes": {
+#     "data": {
+#       "start": 1,
+#       "end": 10
+#     }
+#   }
+# }

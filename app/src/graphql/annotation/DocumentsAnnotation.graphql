@@ -1,0 +1,36 @@
+fragment TaskDistribution on task_distribution {
+  id
+  is_confirmed
+  is_approved
+  document_id
+  document {
+    text
+  }
+}
+
+fragment DocumentAnnotation on documents {
+  id
+  meta
+  text
+  created_at
+}
+
+query DocumentsAnnotation($project_id: uuid!, $limit: Int, $offset: Int, $user_id: uuid) {
+  task_distribution(
+    where: { document: { project_id: { _eq: $project_id } }, user_id: { _eq: $user_id } }
+  ) {
+    ...TaskDistribution
+  }
+  documents(
+    where: { project_id: { _eq: $project_id }, task_distributions: { user_id: { _eq: $user_id } } }
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+  ) {
+    ...DocumentAnnotation
+  }
+}
+
+# {
+# 	"project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143"
+# }

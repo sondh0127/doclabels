@@ -1,0 +1,26 @@
+fragment ProjectOld on projects {
+  id
+  name
+  description
+  project_type
+  annotator_per_example
+  collaborative_annotation
+  randomize_document_order
+  updated_at
+  created_at
+  guideline
+  is_public
+  user {
+    id
+    name
+    auth0_id
+  }
+  project_contributors {
+    role_type
+    user {
+      id
+      name
+      auth0_id
+    }
+  }
+}

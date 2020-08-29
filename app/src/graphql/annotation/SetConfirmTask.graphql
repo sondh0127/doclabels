@@ -1,0 +1,5 @@
+mutation SetConfirmTask($id: uuid!, $is_confirmed: Boolean!) {
+  update_task_distribution_by_pk(pk_columns: { id: $id }, _set: { is_confirmed: $is_confirmed }) {
+    ...TaskDistribution
+  }
+}

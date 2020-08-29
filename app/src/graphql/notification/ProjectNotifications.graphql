@@ -1,0 +1,33 @@
+fragment ProjectNotification on project_notifications {
+  addition_data
+  created_at
+  id
+  is_read
+  notification_type
+  sender_id
+  project {
+    id
+    name
+  }
+  user {
+    auth0_id
+    id
+    name
+  }
+}
+
+query ProjectNotifications($project_id: uuid!) {
+  project_notifications(
+    where: {
+      target_id: { _eq: $project_id }
+      is_read: { _eq: false }
+      notification_type: { _eq: contributor_request }
+    }
+  ) {
+    ...ProjectNotification
+  }
+}
+
+# {
+#   "project_id": "2c2e88fa-4ad5-43dd-8ef2-1f30653b460e"
+# }

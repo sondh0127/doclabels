@@ -1,0 +1,16 @@
+fragment ContributorByNameOrId on users {
+  id
+  auth0_id
+  name
+}
+
+query ContributorsByNameOrId($user_id: uuid, $name: String, $project_id: uuid!) {
+  users(
+    where: {
+      _not: { project_contributors: { project_id: { _eq: $project_id } } }
+      _and: [{ id: { _eq: $user_id } }, { name: { _like: $name } }]
+    }
+  ) {
+    ...ContributorByNameOrId
+  }
+}

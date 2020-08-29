@@ -1,0 +1,22 @@
+fragment ProjectStatistics on projects {
+  project_contributors_aggregate {
+    aggregate {
+      count
+    }
+  }
+  labels_aggregate {
+    aggregate {
+      count
+    }
+  }
+  documents_aggregate {
+    aggregate {
+      count
+    }
+    nodes {
+      task_distributions {
+        is_approved
+      }
+    }
+  }
+}

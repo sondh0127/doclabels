@@ -1,0 +1,19 @@
+query Documents($project_id: uuid!, $limit: Int, $offset: Int) {
+  documents(
+    where: { project_id: { _eq: $project_id } }
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+  ) {
+    ...Document
+  }
+  documents_aggregate(where: { project_id: { _eq: $project_id } }) {
+    aggregate {
+      count
+    }
+  }
+}
+
+# {
+# 	"project_id": "44efabcb-3d33-409c-afcf-fd4c1949a143"
+# }

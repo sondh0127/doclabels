@@ -1,0 +1,21 @@
+fragment Annotation on annotations {
+  data
+  id
+  is_submit
+  manual
+  document_id
+  document {
+    id
+    text
+  }
+  label_id
+  label {
+    ...Label
+  }
+  user_id
+  user {
+    id
+    auth0_id
+    name
+  }
+}

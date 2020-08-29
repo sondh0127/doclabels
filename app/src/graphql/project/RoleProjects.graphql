@@ -1,0 +1,57 @@
+query RoleProjects(
+  $name_or_description: String
+  $project_types: [project_types_enum!]
+  $auth0_id: String!
+  $role_type: role_types_enum!
+  $offset: Int
+  $limit: Int
+) {
+  projects_aggregate(
+    where: {
+      _and: [
+        {
+          _or: [
+            { name: { _ilike: $name_or_description } }
+            { description: { _ilike: $name_or_description } }
+          ]
+        }
+        { project_type: { _in: $project_types } }
+        {
+          project_contributors: {
+            role_type: { _eq: $role_type }
+            user: { auth0_id: { _eq: $auth0_id } }
+          }
+        }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  projects(
+    limit: $limit
+    offset: $offset
+    order_by: { updated_at: desc }
+    where: {
+      _and: [
+        {
+          _or: [
+            { name: { _ilike: $name_or_description } }
+            { description: { _ilike: $name_or_description } }
+          ]
+        }
+        { project_type: { _in: $project_types } }
+        {
+          project_contributors: {
+            role_type: { _eq: $role_type }
+            user: { auth0_id: { _eq: $auth0_id } }
+          }
+        }
+      ]
+    }
+  ) {
+    ...ProjectOld
+    ...ProjectStatistics
+  }
+}
