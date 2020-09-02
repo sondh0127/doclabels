@@ -1,4 +1,4 @@
-## Doclabels - An text annotation tool for document (support PDF format)
+## Doclabels - Annotation system for labelling data from documents (support PDF documents)
 
 ---
 
